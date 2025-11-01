@@ -69,3 +69,13 @@ if __name__ == "__main__":
     mas = MultiAgentSystem(config_list, model_tag, head_agent)
     result = asyncio.run(mas.answer_prompt("Hola, ¿cómo estás?"))
     print(result)
+
+def load_mas(yaml):
+    with open(yaml, 'r') as f:
+        config = yaml.saf_load(f)
+        config_list = config.get('agents')
+        model_tag = config.get('model_tag')
+        head_agent = config.get('head_agent', None)
+
+        mas = MultiAgentSystem(config_list, model_tag, head_agent)
+        return mas

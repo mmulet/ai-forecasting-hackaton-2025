@@ -1,0 +1,27 @@
+# Architecture: Guesser and Verifier
+
+model_tag: unsloth/Qwen2.5-7B-Instruct
+head_agent: Verifier
+
+agents:
+  # Guesser
+  - name: Guesser
+    instructions: |
+    You are a problem-solving agent. Analyze the task and provide your best solution.
+    Your solution is judged by a different LLM. If it thinks your solution is not good enough,
+    you will be given the same task again together with feedback.
+    In this case, provide a different solution.
+    
+  # Verifier
+  - name: Verifier
+    instructions: |
+      You are a judge agent. Your role is to:
+
+      - Hand off the task to the Guesser agent
+      - Evaluate the Guesser's solution for correctness and quality
+      - If the solution is good enough, accept it and provide it as the final answer
+      - If the solution is not good enough, explain why and hand back to Guesser Agent with feedback for another attempt
+      
+      Be critical but fair in your evaluation. You have ultimate authority. 
+    handoffs:
+      - Guesser
