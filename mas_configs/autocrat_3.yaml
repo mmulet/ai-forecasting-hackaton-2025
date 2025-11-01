@@ -29,4 +29,4 @@ agents:
       - Reproduce this solution as the final answer
       
       You have ultimate authority. Select the best solution.
-    handoffs: [Agent 1, Agent 2, Agent 3]  # No handoffs - this is the final authority
+    handoffs: [Agent 1, Agent 2, Agent 3]
