@@ -1,6 +1,6 @@
 # pyright: standard
 from pathlib import Path
-from agents import Agent as OpenAIAgent, ModelSettings, OpenAIChatCompletionsModel, Runner, RunConfig
+from agents import Agent as OpenAIAgent, ModelSettings, OpenAIChatCompletionsModel, Runner, RunConfig, trace, set_tracing_export_api_key
 from openai import AsyncOpenAI
 from inspect_ai.agent import Agent, AgentState, agent, agent_bridge
 from inspect_ai.model import messages_to_openai_responses, ChatMessage
@@ -56,24 +56,38 @@ class MultiAgentSystem:
         #     agents_dict[config.name] = agent
         return agents_dict
 
-    async def answer_prompt(self, prompt: str, logging=False):
+    async def answer_prompt(self, prompt: str, logging=True):
         # TODO: add more logging about the process and individual steps for debugging
         if logging:
-            print(f"Answering prompt: {prompt}")
-        result = await Runner.run(self.head_agent, prompt)
-        if logging:
-            print(f"Answer: {result.final_output}")
+            tracing_api_key = os.environ["OPENAI_API_KEY"]
+            set_tracing_export_api_key(tracing_api_key)
+            with trace("Test worflow"):
+                print(f"Answering prompt: {prompt}")
+                result = await Runner.run(self.head_agent, prompt)
+                print(f"Answer: {result.final_output}")
+        else:
+            result = await Runner.run(self.head_agent, prompt)
         return result.final_output
+    
     async def answer_prompt_inspect(self, messages: list[ChatMessage], logging=False) -> AgentState:
         if logging:
-            print(f"Answering prompt: {messages}")
-        result = await Runner.run(
-            starting_agent=self.head_agent,
-            input=await messages_to_openai_responses(messages),
-            run_config=RunConfig(model="inspect", tracing_disabled=True),
-        )
-        if logging:
-            print(f"Answer: {result.final_output}")
+            tracing_api_key = # INSERT API KEY HERE
+            #TODO: Find a better way to give OPENAI_API_KEY when running with inspect_all.py
+            set_tracing_export_api_key(tracing_api_key)
+            with trace("Test worflow"):
+                print(f"Answering prompt: {messages}")
+                result = await Runner.run(
+                    starting_agent=self.head_agent,
+                    input=await messages_to_openai_responses(messages),
+                    run_config=RunConfig(model="inspect", tracing_disabled=True),
+                )
+                print(f"Answer: {result.final_output}")
+        else:
+            result = await Runner.run(
+                    starting_agent=self.head_agent,
+                    input=await messages_to_openai_responses(messages),
+                    run_config=RunConfig(model="inspect", tracing_disabled=True),
+                )
         return result.final_output
     
 if __name__ == "__main__":
