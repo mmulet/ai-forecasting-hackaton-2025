@@ -1,45 +1,59 @@
 # pyright: standard
 from pathlib import Path
-from agents import Agent as OpenAIAgent, OpenAIChatCompletionsModel, Runner, RunConfig
+from agents import Agent as OpenAIAgent, ModelSettings, OpenAIChatCompletionsModel, Runner, RunConfig
 from openai import AsyncOpenAI
 from inspect_ai.agent import Agent, AgentState, agent, agent_bridge
 from inspect_ai.model import messages_to_openai_responses, ChatMessage
-
 import asyncio
-
-from typing import List, Dict, Set, Optional, Callable
-
+from typing import List
 import os
-os.environ["OPENAI_API_KEY"] = "dummy-key" #TODO: Find better solution than dummy key
+
+from .schema import MultiAgentSystemConfig, AgentConfig
+os.environ["OPENAI_API_KEY"] = "inspectai"
+os.environ["OPENAI_BASE_URL"] = "http://localhost:8000"
+
+
+# os.environ["OPENAI_API_KEY"] = "dummy-key" #TODO: Find better solution than dummy key
 # TODO: Get rid off Incorrect OpenAI API key error message
 
 class MultiAgentSystem:
     """Container and manager for a multi-agent system."""
 
-    def  __init__(self, config_list: List, model_tag: str, head_agent: Optional[str]):
-        self.config_list = config_list
+    # def  __init__(self, config_list: List, model_tag: str, head_agent: Optional[str]):
+    def  __init__(self, config:MultiAgentSystemConfig):
+        config_list = config.agents
+        model_tag = config.model_tag
+        head_agent = config.head_agent
+        self.config_list = config.agents
         self.model = OpenAIChatCompletionsModel(
             model=model_tag,
             openai_client=AsyncOpenAI(
-                base_url="http://localhost:8000/v1",
-                #api_key=API_KEY,
+                # base_url="http://localhost:8000/v1",
+                base_url="http://localhost:8000",
+                # api_key=API_KEY,
+                # api_key="token-abc123"
+                api_key="inspectai"
             )
         )
         self.agents_dict = self.create_agents(config_list)
-        self.head_agent = self.agents_dict[head_agent] if head_agent else self.agents_dict[config_list[0]["name"]]
+        self.head_agent = self.agents_dict[head_agent] if head_agent else self.agents_dict[config_list[0].name]
 
-    def create_agents(self, config_list):
+    def create_agents(self, config_list: List[AgentConfig]):
         agents_dict = {}
         for config in config_list:
             agent = OpenAIAgent(
-                name = config.get("name"),
-                model = self.model,
-                instructions = config.get("instructions"),
-                tools = config.get("tools", []),
-                handoffs = [agents_dict[agent_name] for agent_name in config.get("handoffs", [])]
-                # TODO: insert error message if handoff recipient is referenced before instantiation
+                name=config.name,
+                model=self.model,
+                instructions=config.instructions,
+                # tools=config.tools,
+                handoffs=[agents_dict[agent_name] for agent_name in config.handoffs],
+                model_settings=ModelSettings(tool_choice="none")
             )
-            agents_dict[config.get("name")] = agent
+            # TODO: insert error message if handoff recipient is referenced before instantiation
+            agents_dict[config.name] = agent
+        #         # TODO: insert error message if handoff recipient is referenced before instantiation
+        #     )
+        #     agents_dict[config.name] = agent
         return agents_dict
 
     async def answer_prompt(self, prompt: str, logging=False):
@@ -56,7 +70,7 @@ class MultiAgentSystem:
         result = await Runner.run(
             starting_agent=self.head_agent,
             input=await messages_to_openai_responses(messages),
-            run_config=RunConfig(model="inspect"),
+            run_config=RunConfig(model="inspect", tracing_disabled=True),
         )
         if logging:
             print(f"Answer: {result.final_output}")
@@ -81,19 +95,17 @@ if __name__ == "__main__":
     head_agent = "Triage agent"
     model_tag = "unsloth/Qwen2.5-7B-Instruct"
 
-    mas = MultiAgentSystem(config_list, model_tag, head_agent)
+    mas = MultiAgentSystem(MultiAgentSystemConfig(
+        agents=[AgentConfig(**cfg) for cfg in config_list],
+        model_tag=model_tag,
+        head_agent=head_agent,
+    ))
     result = asyncio.run(mas.answer_prompt("Hola, ¿cómo estás?"))
     print(result)
 
-def load_mas(yaml):
-    with open(yaml, 'r') as f:
-        config = yaml.saf_load(f)
-        config_list = config.get('agents')
-        model_tag = config.get('model_tag')
-        head_agent = config.get('head_agent', None)
+def load_mas(yaml_config_path: str | Path):
+    return MultiAgentSystem(MultiAgentSystemConfig.from_yaml(yaml_config_path))
 
-        mas = MultiAgentSystem(config_list, model_tag, head_agent)
-        return mas
 
 # This is where we define the agent for Inspect AI
 @agent
