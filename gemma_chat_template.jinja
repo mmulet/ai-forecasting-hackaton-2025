@@ -1,0 +1,15 @@
+{% for message in messages %}
+    {% if message['role'] == 'system' %}
+        {# Convert system messages to user messages for Gemma #}
+        <start_of_turn>user
+{{ message['content'] }}<end_of_turn>
+    {% elif message['role'] == 'user' %}
+        <start_of_turn>user
+{{ message['content'] }}<end_of_turn>
+    {% elif message['role'] == 'assistant' %}
+        <start_of_turn>model
+{{ message['content'] }}<end_of_turn>
+    {% endif %}
+{% endfor %}
+{% if add_generation_prompt %}<start_of_turn>model
+{% endif %}

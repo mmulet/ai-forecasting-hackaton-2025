@@ -18,11 +18,18 @@ def run_eval(task_name: str, model: str, gpu: int, max_connections: int = 32) ->
     task_fn = TASKS[task_name]
 
     async def _run() -> None:
+        # Configure model args - add chat template for Gemma models
+        model_args = {"device": str(gpu)}
+        
+        # Gemma models don't support system messages, so use custom chat template
+        if "gemma" in model.lower():
+            model_args["chat_template"] = "gemma_chat_template.jinja"
+
         await eval_async(
             task_fn(model),
             model=vllm_model,
             max_connections=max_connections,
-            model_args={"device": str(gpu)},
+            model_args=model_args,
         )
 
     asyncio.run(_run())
@@ -47,24 +54,17 @@ class QueuedJobs:
 
 
 def main() -> None:
-    model = "unsloth/Qwen2.5-14B-Instruct"
-    # List all jobs (task_name, model, max_connections)
-    configs = [
-        ("single", model, 32),
-        # ("autocrat", model, 32),
-        # ("verifier", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-
+    # Test multiple models
+    models = [
+        "unsloth/SmolLM3-3B",
     ]
+    
+    configs = []
+    for model in models:
+        configs.append(("single", model, 128))
+        configs.append(("autocrat", model, 128))
+        configs.append(("verifier", model, 128))
+        
     devices = [0, 1, 2, 3, 4, 5, 6, 7]  # GPUs you want to use
 
 

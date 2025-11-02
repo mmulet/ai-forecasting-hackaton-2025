@@ -1,0 +1,34 @@
+# Architecture: 3 identical agents feed solutions to 1 autocratic decision-maker
+
+model_tag: unsloth/Qwen2.5-7B-Instruct
+head_agent: Decision Maker
+
+agents:
+  # Agent 1
+  - name: Agent 1
+    instructions: You are a problem-solving agent. Analyze the task and provide your best solution.
+    
+  # Agent 2
+  - name: Agent 2
+    instructions: You are a problem-solving agent. Analyze the task and provide your best solution.
+    
+  # Agent 3
+  - name: Agent 3
+    instructions: You are a problem-solving agent. Analyze the task and provide your best solution.
+    
+  # Autocratic Decision Maker - Receives all solutions and makes final decision
+  - name: Decision Maker
+    instructions: |
+      You are the autocratic decision maker.  You will give the task to all 3 models you can hand off too and receive their solutions.
+      
+      Your role is to:
+      - Review all 3 proposed solutions
+      - Evaluate their quality and correctness
+      - Make the FINAL authoritative decision on which solution is best
+      - Reproduce this solution as the final answer
+      
+      You have ultimate authority. Select the best solution.
+    handoffs: 
+      - Agent 1
+      - Agent 2
+      - Agent 3
