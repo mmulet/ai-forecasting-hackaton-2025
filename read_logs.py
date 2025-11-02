@@ -65,17 +65,15 @@ def read_latest_log(task_name=None, index=0):
     
     # Print sample details
     print(f"\nSample Details:")
-    for i, sample in enumerate(log.samples[:5]):  # First 5 samples only
+    for i, sample in enumerate(log.samples[:5]):
         print(f"\n{'='*80}")
         print(f"Sample {i+1}:")
         print(f"{'='*80}")
         
-        # Show the full message history/conversation
         if hasattr(sample, 'messages') and sample.messages:
             print(f"\n--- MESSAGES/PROMPTS ---")
             print(f"Total messages: {len(sample.messages)}")
             
-            # Count assistant messages (model responses)
             assistant_count = sum(1 for msg in sample.messages if hasattr(msg, 'role') and msg.role == 'assistant')
             print(f"Assistant messages (model turns): {assistant_count}")
             
@@ -86,16 +84,15 @@ def read_latest_log(task_name=None, index=0):
                 print(content)
         
         print(f"\n--- INPUT ---")
-        print(sample.input)  # Full input, no truncation
+        print(sample.input)  
         
         if sample.output:
             print(f"\n--- OUTPUT/COMPLETION ---")
-            print(sample.output.completion)  # Full output, no truncation
+            print(sample.output.completion)  
         
         print(f"\n--- SCORE ---")
         print(sample.scores)
         
-        # Show token usage for this sample
         if hasattr(sample, 'output') and sample.output and hasattr(sample.output, 'usage'):
             usage = sample.output.usage
             print(f"\n--- TOKEN USAGE (This Sample) ---")

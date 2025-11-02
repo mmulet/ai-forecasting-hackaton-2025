@@ -71,7 +71,7 @@ class MultiAgentSystem:
     
     async def answer_prompt_inspect(self, messages: list[ChatMessage], logging=False) -> AgentState:
         if logging:
-            tracing_api_key = # INSERT API KEY HERE
+            tracing_api_key = "dummy"
             #TODO: Find a better way to give OPENAI_API_KEY when running with inspect_all.py
             set_tracing_export_api_key(tracing_api_key)
             with trace("Test worflow"):

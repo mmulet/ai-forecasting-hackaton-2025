@@ -48,23 +48,18 @@ class QueuedJobs:
 
 def main() -> None:
     # List all jobs (task_name, model, max_connections)
-    configs = [
+    configs = [        
+        ("single", "unsloth/SmolLM3-3B", 128),
+        ("autocrat", "unsloth/SmolLM3-3B", 128),
+        ("verifier", "unsloth/SmolLM3-3B", 128),
 
+        ("single", "unsloth/Qwen2.5-14B-Instruct", 64),
+        ("autocrat", "unsloth/Qwen2.5-14B-Instruct", 64),
+        ("verifier", "unsloth/Qwen2.5-14B-Instruct", 64),
 
-        
-        ("single", "unsloth/SmolLM3-3B", 64),
-        ("autocrat", "unsloth/SmolLM3-3B", 64),
-        ("verifier", "unsloth/SmolLM3-3B", 64),
-
-        ("single", "unsloth/Llama-3.2-3B-Instruct", 64),
-        ("autocrat", "unsloth/Llama-3.2-3B-Instruct", 64),
-        ("verifier", "unsloth/Llama-3.2-3B-Instruct", 64),
-
-
-
-        ("single", "unsloth/Qwen2.5-0.5B-Instruct", 64),
-        ("autocrat", "unsloth/Qwen2.5-0.5B-Instruct", 64),
-        ("verifier", "unsloth/Qwen2.5-0.5B-Instruct", 64),
+        ("single", "unsloth/Qwen2.5-3B-Instruct", 128),
+        ("autocrat", "unsloth/Qwen2.5-3B-Instruct", 128),
+        ("verifier", "unsloth/Qwen2.5-3B-Instruct", 128),
 
 
     ]
