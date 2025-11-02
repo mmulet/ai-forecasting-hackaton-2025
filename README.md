@@ -13,6 +13,9 @@ source .venv/bin/activate
 export OPENAI_BASE_URL="http://localhost:8000"
 export OPENAI_API_KEY="inspectai"
 export OPENAI_TRACING=disabled
-inspect eval inspect_eval.py --max-connections 64 --model vllm/unsloth/Qwen2.5-7b-Instruct -M --enable-auto-tool-choice -M --tool-call-parser=openai-json
+inspect eval inspect_eval.py --max-connections 64 --model vllm/unsloth/Qwen2.5-7b-Instruct
 ```
 (technically you can start the vllm server from inspect but this has subtle bugs that I really don't want to go into right now)
+
+
+<!-- inspect eval inspect_eval.py --max-connections 64 --model vllm/unsloth/Qwen2.5-7b-Instruct -M enable-auto-tool-choice -M tool-call-parser=openai-json -->
