@@ -49,13 +49,13 @@ class QueuedJobs:
 def main() -> None:
     # List all jobs (task_name, model, max_connections)
     configs = [        
-        ("single", "HuggingFaceTB/SmolLM2-1.7B-Instruct", 128),
-        ("autocrat", "HuggingFaceTB/SmolLM2-1.7B-Instruct", 128),
-        ("verifier", "HuggingFaceTB/SmolLM2-1.7B-Instruct", 128),
+        ("single", "Qwen/Qwen2.5-0.5B-Instruct", 128),
+        ("autocrat", "Qwen/Qwen2.5-0.5B-Instruct", 128),
+        ("verifier", "Qwen/Qwen2.5-0.5B-Instruct", 128),
 
-        ("single", "HuggingFaceTB/SmolLM2-360M-Instruct", 128),
-        ("autocrat", "HuggingFaceTB/SmolLM2-360M-Instruct", 128),
-        ("verifier", "HuggingFaceTB/SmolLM2-360M-Instruct", 128),
+        ("single", "unsloth/DeepSeek-R1-Distill-Llama-8B", 128),
+        ("autocrat", "unsloth/DeepSeek-R1-Distill-Llama-8B", 128),
+        ("verifier", "unsloth/DeepSeek-R1-Distill-Llama-8B", 128),
     ]
     devices = [0, 1, 2, 3, 4, 5, 6, 7]  # GPUs you want to use
 
