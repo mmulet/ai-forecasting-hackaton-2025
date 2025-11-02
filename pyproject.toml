@@ -8,5 +8,7 @@ dependencies = [
     "datasets>=4.3.0",
     "inspect-ai>=0.3.143",
     "openai-agents>=0.4.2",
+    "pandas>=2.3.3",
+    "pyarrow>=22.0.0",
     "vllm>=0.11.0",
 ]

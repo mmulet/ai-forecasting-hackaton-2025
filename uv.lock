@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 2
 requires-python = ">=3.11.3"
 resolution-markers = [
     "python_full_version >= '3.13'",
@@ -15,6 +15,8 @@ dependencies = [
     { name = "datasets" },
     { name = "inspect-ai" },
     { name = "openai-agents" },
+    { name = "pandas" },
+    { name = "pyarrow" },
     { name = "vllm" },
 ]
 
@@ -23,6 +25,8 @@ requires-dist = [
     { name = "datasets", specifier = ">=4.3.0" },
     { name = "inspect-ai", specifier = ">=0.3.143" },
     { name = "openai-agents", specifier = ">=0.4.2" },
+    { name = "pandas", specifier = ">=2.3.3" },
+    { name = "pyarrow", specifier = ">=22.0.0" },
     { name = "vllm", specifier = ">=0.11.0" },
 ]
 
