@@ -93,7 +93,7 @@ def evaluate_model_on_adele() -> Task:
     # small_subset = ds[0:100]
     
     return Task(
-        dataset=small_subset,
+        dataset=ds,
         # solver=mas_agent(current_dir / "mas_configs" / "single.yaml"),
         solver=mas_agent(current_dir / "mas_configs" / "autocrat_3.yaml"),
         scorer=[score_sample()],
