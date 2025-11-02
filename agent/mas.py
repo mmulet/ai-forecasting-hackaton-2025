@@ -1,5 +1,9 @@
-from agents import Agent, OpenAIChatCompletionsModel, Runner
+# pyright: standard
+from pathlib import Path
+from agents import Agent as OpenAIAgent, OpenAIChatCompletionsModel, Runner, RunConfig
 from openai import AsyncOpenAI
+from inspect_ai.agent import Agent, AgentState, agent, agent_bridge
+from inspect_ai.model import messages_to_openai_responses, ChatMessage
 
 import asyncio
 
@@ -27,7 +31,7 @@ class MultiAgentSystem:
     def create_agents(self, config_list):
         agents_dict = {}
         for config in config_list:
-            agent = Agent(
+            agent = OpenAIAgent(
                 name = config.get("name"),
                 model = self.model,
                 instructions = config.get("instructions"),
@@ -43,6 +47,17 @@ class MultiAgentSystem:
         if logging:
             print(f"Answering prompt: {prompt}")
         result = await Runner.run(self.head_agent, prompt)
+        if logging:
+            print(f"Answer: {result.final_output}")
+        return result.final_output
+    async def answer_prompt_inspect(self, messages: list[ChatMessage], logging=False) -> AgentState:
+        if logging:
+            print(f"Answering prompt: {messages}")
+        result = await Runner.run(
+            starting_agent=self.head_agent,
+            input=await messages_to_openai_responses(messages),
+            run_config=RunConfig(model="inspect"),
+        )
         if logging:
             print(f"Answer: {result.final_output}")
         return result.final_output
@@ -79,3 +94,16 @@ def load_mas(yaml):
 
         mas = MultiAgentSystem(config_list, model_tag, head_agent)
         return mas
+
+# This is where we define the agent for Inspect AI
+@agent
+def mas_agent(yaml: str | Path) -> Agent:
+    async def execute(state: AgentState) -> AgentState:
+        # Use bridge to map OpenAI Responses API to Inspect Model API
+        async with agent_bridge(state) as bridge:
+            mas = load_mas(yaml)
+            await mas.answer_prompt_inspect(state.messages)
+           
+            return bridge.state
+
+    return execute
