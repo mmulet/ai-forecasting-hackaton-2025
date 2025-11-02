@@ -30,11 +30,10 @@ def run_eval(task_name: str, model: str, gpu: int, max_connections: int = 32) ->
 
 
 class QueuedJobs:
-    def __init__(self, configs: Any, devices: list[int], max_concurrent: int):
+    def __init__(self, configs: Any, devices: list[int]):
         self.configs = configs
         self.devices = devices
-        self.max_concurrent = max_concurrent
-        self.parallelism = min(max_concurrent, len(devices))
+        self.parallelism = len(devices)
 
         self.job_queue = deque(configs)
         self.free_devices = deque(devices)
@@ -67,16 +66,14 @@ def main() -> None:
 
     ]
     devices = [0, 1, 2, 3, 4, 5, 6, 7]  # GPUs you want to use
-    max_concurrent = 8      # overall cap
 
 
 
-    parallelism = min(max_concurrent, len(devices))
-    q = QueuedJobs(configs, devices, max_concurrent)
+    q = QueuedJobs(configs, devices)
 
  
     ctx = mp.get_context("spawn")
-    with ProcessPoolExecutor(max_workers=parallelism, mp_context=ctx) as ex:
+    with ProcessPoolExecutor(max_workers=len(devices), mp_context=ctx) as ex:
         # Prime
         q.add_jobs(ex)
 
