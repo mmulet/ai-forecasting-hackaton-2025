@@ -66,11 +66,11 @@ def main() -> None:
         ("single", model, 32),
 
     ]
-    devices = [0, 1, 2, 3]  # GPUs you want to use
+    devices = [0, 1, 2, 3, 4, 5, 6, 7]  # GPUs you want to use
     max_concurrent = 8      # overall cap
 
 
-    
+
     parallelism = min(max_concurrent, len(devices))
     q = QueuedJobs(configs, devices, max_concurrent)
 
