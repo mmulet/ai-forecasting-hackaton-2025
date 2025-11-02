@@ -5,7 +5,10 @@ inspect eval.py contains code to pass to the Inspect eval framework.
 
 1. Go to https://huggingface.co/datasets/CFI-Kinds-of-Intelligence/ADeLe_battery_v1dot0 and accept the terms of use.
 
-2. Put your huggingface 
+2. Put your huggingface token in .env file with 
+```
+HF_TOKEN=your_token_here
+```
 
 Run with
 
