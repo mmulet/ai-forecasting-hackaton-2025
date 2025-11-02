@@ -1,0 +1,6 @@
+{
+  "name": "mas-agent",
+  "version": "1.0.0",
+  "description": "Multi-Agent System for Vivaria",
+  "main": "main.py"
+}

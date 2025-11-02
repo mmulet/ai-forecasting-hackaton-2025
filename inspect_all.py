@@ -49,6 +49,9 @@ class QueuedJobs:
 def main() -> None:
     # List all jobs (task_name, model, max_connections)
     configs = [
+
+
+        
         ("single", "unsloth/SmolLM3-3B", 64),
         ("autocrat", "unsloth/SmolLM3-3B", 64),
         ("verifier", "unsloth/SmolLM3-3B", 64),
