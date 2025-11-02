@@ -90,7 +90,7 @@ def evaluate_model_on_adele() -> Task:
     
     # limit Multiple Choice for faster testing
     ds = ds.filter(lambda x: x.metadata["answer_format"] == "MC")  
-    small_subset = ds[0:100]
+    # small_subset = ds[0:100]
     
     return Task(
         dataset=small_subset,
