@@ -6,10 +6,10 @@ agents:
   # Guesser
   - name: Guesser
     instructions: |
-    You are a problem-solving agent. Analyze the task and provide your best solution.
-    Your solution is judged by a different LLM. If it thinks your solution is not good enough,
-    you will be given the same task again together with feedback.
-    In this case, provide a different solution.
+      You are a problem-solving agent. Analyze the task and provide your best solution.
+      Your solution is judged by a different LLM. If it thinks your solution is not good enough,
+      you will be given the same task again together with feedback.
+      In this case, provide a different solution.
     
   # Verifier
   - name: Verifier

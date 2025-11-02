@@ -14,6 +14,8 @@ Run with
 
 in a separate terminal, then
 NEW
+Edit inspect_all.py to change your config and devices.py.
+
 ```bash
 uv sync
 source .venv/bin/activate
