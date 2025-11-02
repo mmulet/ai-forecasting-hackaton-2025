@@ -9,4 +9,5 @@ def load_dataset():
             split="train",
             sample_fields=record_to_sample,
         )
-    return ds.filter(lambda x: x.metadata["answer_format"] == "MC")  
+    ds.shuffle(seed=42)
+    return ds.filter(lambda x: x.metadata["answer_format"] == "MC")[:2000]

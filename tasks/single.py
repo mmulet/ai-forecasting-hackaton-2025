@@ -10,7 +10,7 @@ from agent import mas_agent
 def single(model: str) -> Task:
     config_name = "single"
     return Task(
-        dataset=load_dataset()[0:10],
+        dataset=load_dataset(),
         solver= mas_agent(model, get_config_path(config_name)),
         scorer=[score_sample()],
         metadata=dict(config=config_name)

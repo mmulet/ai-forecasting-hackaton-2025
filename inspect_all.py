@@ -47,22 +47,22 @@ class QueuedJobs:
 
 
 def main() -> None:
-    model = "unsloth/Qwen2.5-14B-Instruct"
     # List all jobs (task_name, model, max_connections)
     configs = [
-        ("single", model, 32),
-        # ("autocrat", model, 32),
-        # ("verifier", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
-        ("single", model, 32),
+        ("single", "unsloth/SmolLM3-3B", 64),
+        ("autocrat", "unsloth/SmolLM3-3B", 64),
+        ("verifier", "unsloth/SmolLM3-3B", 64),
+
+        ("single", "unsloth/Llama-3.2-3B-Instruct", 64),
+        ("autocrat", "unsloth/Llama-3.2-3B-Instruct", 64),
+        ("verifier", "unsloth/Llama-3.2-3B-Instruct", 64),
+
+
+
+        ("single", "unsloth/Qwen2.5-0.5B-Instruct", 64),
+        ("autocrat", "unsloth/Qwen2.5-0.5B-Instruct", 64),
+        ("verifier", "unsloth/Qwen2.5-0.5B-Instruct", 64),
+
 
     ]
     devices = [0, 1, 2, 3, 4, 5, 6, 7]  # GPUs you want to use

@@ -43,6 +43,7 @@ def score_sample():
             raise ValueError("Only MC supported in this scorer")
         mc_answer = answer[:1] # should be A. or B. etc
         answer_regex_match = answer_regex.search(state.output.completion)
+
         predicted_answer = answer_regex_match.group(1) if answer_regex_match else None
         value = "C" if predicted_answer == mc_answer else "I"
         return Score(value=value,
@@ -95,58 +96,59 @@ def evaluate_model_on_adele() -> Task:
     return Task(
         dataset=small_subset,
         # solver=mas_agent(current_dir / "mas_configs" / "single.yaml"),
-        solver=mas_agent(current_dir / "mas_configs" / "autocrat_3.yaml"),
-        scorer=[score_sample()],
-        metadata=dict(config="autocrat_3")
-
-    )
-
-@task
-def evaluate_model_on_adele_2() -> Task:
-    ds = hf_dataset(
-            path="CFI-Kinds-of-Intelligence/ADeLe_battery_v1dot0",
-            split="train",
-            sample_fields=record_to_sample,
-        )
-    # get current folder
-    current_dir = Path(os.path.dirname(os.path.abspath(__file__)))
-    
-    
-    # limit Multiple Choice for faster testing
-    ds = ds.filter(lambda x: x.metadata["answer_format"] == "MC")  
-    small_subset = ds[0:100]
-    
-    return Task(
-        dataset=small_subset = ds[0:100]
-,
-        # solver=mas_agent(current_dir / "mas_configs" / "single.yaml"),
-        solver=mas_agent(current_dir / "mas_configs" / "single.yaml"),
+        # solver=mas_agent("unsloth/Qwen2.5-7B-Instruct" , current_dir / "mas_configs" / "autocrat_3.yaml"),
+        solver=mas_agent("unsloth/Qwen2.5-7B-Instruct" , current_dir / "mas_configs" / "single.yaml"),
         scorer=[score_sample()],
         metadata=dict(config="single")
 
     )
 
-@task
-def evaluate_model_on_adele_3() -> Task:
-    ds = hf_dataset(
-            path="CFI-Kinds-of-Intelligence/ADeLe_battery_v1dot0",
-            split="train",
-            sample_fields=record_to_sample,
-        )
-    # get current folder
-    current_dir = Path(os.path.dirname(os.path.abspath(__file__)))
+# @task
+# def evaluate_model_on_adele_2() -> Task:
+#     ds = hf_dataset(
+#             path="CFI-Kinds-of-Intelligence/ADeLe_battery_v1dot0",
+#             split="train",
+#             sample_fields=record_to_sample,
+#         )
+#     # get current folder
+#     current_dir = Path(os.path.dirname(os.path.abspath(__file__)))
     
     
-    # limit Multiple Choice for faster testing
-    ds = ds.filter(lambda x: x.metadata["answer_format"] == "MC")  
-    small_subset = ds[0:100]
+#     # limit Multiple Choice for faster testing
+#     ds = ds.filter(lambda x: x.metadata["answer_format"] == "MC")  
+#     small_subset = ds[0:100]
     
-    return Task(
-        dataset=small_subset,
-        # solver=mas_agent(current_dir / "mas_configs" / "single.yaml"),
-        solver=mas_agent(current_dir / "mas_configs" / "verifier.yaml"),
-        scorer=[score_sample()],
-        metadata=dict(config="verifier")
+#     return Task(
+#         dataset=small_subset = ds[0:100]
+# ,
+#         # solver=mas_agent(current_dir / "mas_configs" / "single.yaml"),
+#         solver=mas_agent(current_dir / "mas_configs" / "single.yaml"),
+#         scorer=[score_sample()],
+#         metadata=dict(config="single")
 
-    )
+#     )
+
+# @task
+# def evaluate_model_on_adele_3() -> Task:
+#     ds = hf_dataset(
+#             path="CFI-Kinds-of-Intelligence/ADeLe_battery_v1dot0",
+#             split="train",
+#             sample_fields=record_to_sample,
+#         )
+#     # get current folder
+#     current_dir = Path(os.path.dirname(os.path.abspath(__file__)))
+    
+    
+#     # limit Multiple Choice for faster testing
+#     ds = ds.filter(lambda x: x.metadata["answer_format"] == "MC")  
+#     small_subset = ds[0:100]
+    
+#     return Task(
+#         dataset=small_subset,
+#         # solver=mas_agent(current_dir / "mas_configs" / "single.yaml"),
+#         solver=mas_agent(current_dir / "mas_configs" / "verifier.yaml"),
+#         scorer=[score_sample()],
+#         metadata=dict(config="verifier")
+
+#     )
   
