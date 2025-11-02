@@ -13,6 +13,16 @@ HF_TOKEN=your_token_here
 Run with
 
 in a separate terminal, then
+NEW
+```bash
+uv sync
+source .venv/bin/activate
+python inspect_all.py
+```
+
+
+--------
+OLD
 
 ```bash
 uv sync
