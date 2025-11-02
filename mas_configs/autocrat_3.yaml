@@ -1,6 +1,5 @@
 # Architecture: 3 identical agents feed solutions to 1 autocratic decision-maker
 
-model_tag: unsloth/Qwen2.5-7B-Instruct
 head_agent: Decision Maker
 
 agents:

@@ -1,6 +1,5 @@
 # Architecture: Guesser and Verifier
 
-model_tag: unsloth/Qwen2.5-7B-Instruct
 head_agent: Verifier
 
 agents:

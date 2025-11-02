@@ -1,14 +1,27 @@
 import os
-os.environ["OPENAI_API_KEY"] = "inspectai"
-os.environ["OPENAI_BASE_URL"] = "http://localhost:8000"
+# os.environ["OPENAI_API_KEY"] = "inspectai"
+# os.environ["OPENAI_BASE_URL"] = "http://localhost:8000"
 
 from inspect_ai import eval_async
 from tasks import single, autocrat, verifier
 
 
 async def main():
-    await eval_async(single(),model="vllm/unsloth/Qwen2.5-7B-Instruct", max_connections=64)
+    model = "unsloth/Qwen2.5-14B-Instruct"
+    vllm_model = f"vllm/{model}"
+    coroutines = [
+        eval_async(single(model),model=vllm_model, max_connections=32, model_args={"device": "2"}),
+        # eval_async(autocrat(model),model=vllm_model, max_connections=64, model_args={"device": "3"}),
+        # eval_async(verifier(model),model=vllm_model, max_connections=64, model_args={"device": "4"})
+    ]
+    await asyncio.gather(*coroutines)
     print("done!")
+
+    
+
+
+    # await eval_async(single(),model="vllm/unsloth/Qwen2.5-7B-Instruct", max_connections=64, model_args={"device": "2"})
+    # print("done!")
 
     # coros = [
     #     eval_async(single()),

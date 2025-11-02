@@ -1,7 +1,6 @@
 # Multi-Agent System Configuration
 # Architecture: Single Agent System
 
-model_tag: unsloth/Qwen2.5-7B-Instruct
 head_agent: Agent
 
 agents:

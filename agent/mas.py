@@ -9,8 +9,8 @@ from typing import List
 import os
 
 from .schema import MultiAgentSystemConfig, AgentConfig
-os.environ["OPENAI_API_KEY"] = "inspectai"
-os.environ["OPENAI_BASE_URL"] = "http://localhost:8000"
+# os.environ["OPENAI_API_KEY"] = "inspectai"
+# os.environ["OPENAI_BASE_URL"] = "http://localhost:8000"
 
 
 # os.environ["OPENAI_API_KEY"] = "dummy-key" #TODO: Find better solution than dummy key
@@ -20,9 +20,9 @@ class MultiAgentSystem:
     """Container and manager for a multi-agent system."""
 
     # def  __init__(self, config_list: List, model_tag: str, head_agent: Optional[str]):
-    def  __init__(self, config:MultiAgentSystemConfig):
+    def  __init__(self,model: str, config:MultiAgentSystemConfig):
         config_list = config.agents
-        model_tag = config.model_tag
+        model_tag = model
         head_agent = config.head_agent
         self.config_list = config.agents
         self.model = OpenAIChatCompletionsModel(
@@ -95,25 +95,24 @@ if __name__ == "__main__":
     head_agent = "Triage agent"
     model_tag = "unsloth/Qwen2.5-7B-Instruct"
 
-    mas = MultiAgentSystem(MultiAgentSystemConfig(
+    mas = MultiAgentSystem(model_tag, MultiAgentSystemConfig(
         agents=[AgentConfig(**cfg) for cfg in config_list],
-        model_tag=model_tag,
         head_agent=head_agent,
     ))
     result = asyncio.run(mas.answer_prompt("Hola, ¿cómo estás?"))
     print(result)
 
-def load_mas(yaml_config_path: str | Path):
-    return MultiAgentSystem(MultiAgentSystemConfig.from_yaml(yaml_config_path))
+def load_mas(model: str, yaml_config_path: str | Path):
+    return MultiAgentSystem(model, MultiAgentSystemConfig.from_yaml(yaml_config_path))
 
 
 # This is where we define the agent for Inspect AI
 @agent
-def mas_agent(yaml: str | Path) -> Agent:
+def mas_agent(model: str, yaml: str | Path) -> Agent:
     async def execute(state: AgentState) -> AgentState:
         # Use bridge to map OpenAI Responses API to Inspect Model API
         async with agent_bridge(state) as bridge:
-            mas = load_mas(yaml)
+            mas = load_mas(model, yaml)
             await mas.answer_prompt_inspect(state.messages)
            
             return bridge.state

@@ -16,7 +16,6 @@ class AgentConfig(BaseModel):
 
 class MultiAgentSystemConfig(BaseModel):
     agents: List[AgentConfig]
-    model_tag: str
     head_agent: Optional[str] = None
     @classmethod
     def from_yaml(cls, yaml_path: str | Path) -> "MultiAgentSystemConfig":
